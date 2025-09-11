@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,18 +14,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "हीरालाल नागर — लेखक, सैनिक, संपादक",
-  description: "24 वर्षों की सैन्य सेवा के बाद साहित्य के क्षेत्र में सक्रिय। कथा, कविता, आलोचना और सम्पादन में योगदान।",
+  title: "हीरालाल नागर",
+  description: "सुपरिचित कथाकार, कविता तथा आलोचना में भी दखल",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="hi">
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* Place the Header component at the top of the body */}
         <Navbar />
-        {children}
+
+        {/* The main content of the page will be rendered here */}
+        <main>{children}</main>
+
+        {/* Place the Footer component at the bottom */}
         <Footer />
       </body>
     </html>
