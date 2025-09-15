@@ -22,7 +22,7 @@ export default function Navbar() {
           हीरालाल नागर
         </h1>
         <p className="text-red-500 font-medium text-lg md:text-xl mt-2">
-          सुपरिचित साहित्यकार
+          कथाकार, आलोचक और कवि
         </p>
       </div>
 

@@ -22,15 +22,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        {/* Place the Header component at the top of the body */}
+        {/* Header */}
         <Navbar />
 
-        {/* The main content of the page will be rendered here */}
-        <main>{children}</main>
+        {/* Main content (takes available space) */}
+        <main className="flex-grow">{children}</main>
 
-        {/* Place the Footer component at the bottom */}
+        {/* Sticky Footer */}
         <Footer />
       </body>
     </html>

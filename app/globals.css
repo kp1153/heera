@@ -29,3 +29,87 @@ button {
   font-weight: 500 !important;
   letter-spacing: 0.025em;
 }
+
+/* Sanity Studio Sidebar Compact करने के लिए */
+
+/* Main layout को flex में convert */
+[data-testid="studio-layout"] {
+  display: flex !important;
+  height: 100vh !important;
+}
+
+/* Left sidebar को minimum width देना */
+[data-testid="structure-tool"] {
+  min-width: 180px !important;
+  max-width: 180px !important;
+  width: 180px !important;
+  overflow-y: auto !important;
+  border-right: 1px solid #e5e7eb;
+}
+
+/* Sidebar के अंदर के items को compact करना */
+[data-testid="structure-tool"] [data-testid="pane-content"] {
+  padding: 8px !important;
+}
+
+/* List items को छोटा करना */
+[data-testid="structure-tool"] li {
+  padding: 4px 8px !important;
+  font-size: 14px !important;
+}
+
+/* Icons को छोटा करना */
+[data-testid="structure-tool"] svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* Main content area को full width देना */
+[data-testid="desk-tool"],
+[data-testid="document-pane"] {
+  flex: 1 !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* Document editor को maximum space देना */
+.pt-document-panel-scroller {
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+
+/* Portable text editor को wide करना */
+[data-testid="portable-text-editor"] {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+/* Form fields को full width करना */
+[data-testid="form-view"] > div {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+/* Title field को भी full width */
+[data-testid="string-input"] {
+  width: 100% !important;
+}
+
+/* Content area का padding adjust करना */
+[data-testid="document-pane-content"] {
+  padding: 16px 24px !important;
+  max-width: none !important;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  [data-testid="structure-tool"] {
+    min-width: 60px !important;
+    max-width: 60px !important;
+    width: 60px !important;
+  }
+  
+  [data-testid="structure-tool"] span {
+    display: none !important;
+  }
+}
