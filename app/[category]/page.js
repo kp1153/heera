@@ -28,7 +28,7 @@ export default async function CategoryPage({ params }) {
 
   console.log("✅ Decoded category:", safeCategory);
 
-  // Validate category
+  // साहित्यिक categories के लिए validation
   const validCategories = [
     "kavita",
     "kahani",
@@ -84,14 +84,14 @@ export default async function CategoryPage({ params }) {
           </Link>
         </div>
         <h1 className="text-4xl font-bold mb-6 text-gray-900">
-          {categoryDisplayName} की खबरें
+          {categoryDisplayName} की रचनाएं
         </h1>
         <div className="text-center py-12 bg-gray-50 rounded-lg">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            कोई खबर नहीं मिली
+            कोई रचना नहीं मिली
           </h2>
           <p className="text-gray-600 text-lg">
-            इस श्रेणी में अभी तक कोई खबर प्रकाशित नहीं हुई है।
+            इस श्रेणी में अभी तक कोई रचना प्रकाशित नहीं हुई है।
           </p>
         </div>
       </main>
@@ -110,7 +110,7 @@ export default async function CategoryPage({ params }) {
       </div>
 
       <h1 className="text-4xl font-bold mb-8 text-gray-900">
-        {categoryDisplayName} की खबरें
+        {categoryDisplayName} की रचनाएं
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -142,22 +142,18 @@ export default async function CategoryPage({ params }) {
 
               <h2 className="text-xl font-bold mb-4 text-gray-900 leading-tight">
                 <Link
-                  href={`/${safeCategory}/${post.slug}`}
+                  href={`/${safeCategory}/${post.slug?.current}`}
                   className="hover:underline hover:text-blue-700 transition-colors"
                 >
                   {post.title}
                 </Link>
               </h2>
 
-              <p className="text-gray-700 text-sm line-clamp-3 mb-4 leading-relaxed">
-                {post.excerpt || "खबर का विवरण उपलब्ध नहीं है।"}
-              </p>
-
               <Link
-                href={`/${safeCategory}/${post.slug.current}`}
+                href={`/${safeCategory}/${post.slug?.current}`}
                 className="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-sm hover:underline transition-colors"
               >
-                पूरी खबर पढ़ें
+                पूरी रचना पढ़ें
                 <svg
                   className="w-4 h-4 ml-1"
                   fill="none"

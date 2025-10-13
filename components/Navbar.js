@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Navbar() {
   const navItems = [
-    { name: "होम", href: "/home" },
+    { name: "होम", href: "/" }, // सही रूट
     { name: "कविता", href: "/kavita" },
     { name: "कहानी", href: "/kahani" },
     { name: "उपन्यास", href: "/upanyas" },

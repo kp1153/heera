@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 // Category display names mapping
 const getCategoryDisplayName = (route) => {
   const displayNames = {
-     kavita: "कविता",
+    kavita: "कविता",
     kahani: "कहानी",
     upanyas: "उपन्यास",
     alochna: "आलोचना",
@@ -71,8 +71,8 @@ const portableTextComponents = {
       <a
         href={value.href}
         className="text-blue-600 hover:text-blue-800 underline font-medium"
-        target="_blank"
-        rel="noopener noreferrer"
+        target={value.blank ? "_blank" : "_self"}
+        rel={value.blank ? "noopener noreferrer" : undefined}
       >
         {children}
       </a>
@@ -81,12 +81,12 @@ const portableTextComponents = {
   types: {
     image: ({ value }) => (
       <div className="my-8">
-        <div className="relative w-full h-96 rounded-lg overflow-hidden shadow-lg">
+        <div className="relative w-full aspect-video rounded-lg overflow-hidden shadow-lg">
           <Image
-            src={urlFor(value).width(1200).height(600).url()}
+            src={urlFor(value).url()}
             alt={value.alt || "Article image"}
             fill
-            className="object-cover"
+            className="object-contain"
           />
         </div>
         {value.caption && (
@@ -99,7 +99,7 @@ const portableTextComponents = {
   },
 };
 
-export default async function NewsPage({ params }) {
+export default async function PostPage({ params }) {
   const { category, slug } = await params;
 
   const safeCategory = decodeURIComponent(category);
@@ -107,13 +107,16 @@ export default async function NewsPage({ params }) {
 
   console.log("Params:", { safeCategory, safeSlug });
 
+  // साहित्यिक categories के लिए validation
   const validCategories = [
-    "desh-videsh",
-    "pratirodh",
-    "jeevan-ke-rang",
+    "kavita",
+    "kahani",
+    "upanyas",
+    "alochna",
+    "aalekh",
+    "sampadhan",
+    "jivani",
     "vividh",
-    "kala-sahitya",
-    "krishi-maveshi",
   ];
 
   if (!validCategories.includes(safeCategory)) {
@@ -163,7 +166,7 @@ export default async function NewsPage({ params }) {
               {categoryDisplayName}
             </Link>
             <span className="text-gray-500">›</span>
-            <span className="text-gray-700 font-medium">वर्तमान खबर</span>
+            <span className="text-gray-700 font-medium">वर्तमान रचना</span>
           </nav>
         </div>
 
@@ -184,12 +187,12 @@ export default async function NewsPage({ params }) {
 
         {/* Main Image */}
         {post.mainImageUrl && (
-          <div className="relative w-full h-96 mb-8 rounded-xl overflow-hidden shadow-lg">
+          <div className="relative w-full aspect-video mb-8 rounded-xl overflow-hidden shadow-lg">
             <Image
               src={post.mainImageUrl}
               alt={post.mainImageAlt}
               fill
-              className="object-cover"
+              className="object-contain"
               priority // LCP image
             />
           </div>
@@ -231,7 +234,7 @@ export default async function NewsPage({ params }) {
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-            और {categoryDisplayName} की खबरें देखें
+            और {categoryDisplayName} की रचनाएं देखें
           </Link>
 
           <Link

@@ -22,22 +22,17 @@ export const schema = {
             source: "name",
             maxLength: 96,
             slugify: (input) => {
-              // Hindi to English mapping for categories
               const categoryMap = {
-                "देश-विदेश": "desh-videsh",
-                प्रतिरोध: "pratirodh",
-                "जीवन के रंग": "jeevan-ke-rang",
+                कविता: "kavita",
+                जीवनी: "jivani",
+                संपादन: "sampadhan",
                 विविध: "vividh",
-                "कला-साहित्य": "kala-sahitya",
-                "कृषि-मवेशी": "krishi-maveshi",
+                आलेख: "aalekh",
+                उपन्यास: "upanyas",
+                कहानी: "kahani",
+                आलोचना: "alochna",
               };
-
-              // If direct mapping exists, use it
-              if (categoryMap[input]) {
-                return categoryMap[input];
-              }
-
-              // Otherwise, create slug from input
+              if (categoryMap[input]) return categoryMap[input];
               return input
                 .toLowerCase()
                 .replace(/\s+/g, "-")
@@ -91,15 +86,14 @@ export const schema = {
               return (
                 input
                   .toLowerCase()
-                  .replace(/[\u0900-\u097F]/g, "") // Remove Hindi characters
-                  .replace(/[^\w\s-]/g, "") // Remove special characters except spaces and hyphens
+                  .replace(/[\u0900-\u097F]/g, "")
+                  .replace(/[^\w\s-]/g, "")
                   .trim()
-                  .replace(/\s+/g, "-") // Replace spaces with hyphens
-                  .replace(/\-\-+/g, "-") // Replace multiple hyphens with single
-                  .replace(/^-+/, "") // Remove leading hyphens
-                  .replace(/-+$/, "") || // Remove trailing hyphens
-                `post-${Date.now()}`
-              ); // Fallback if empty
+                  .replace(/\s+/g, "-")
+                  .replace(/\-\-+/g, "-")
+                  .replace(/^-+/, "")
+                  .replace(/-+$/, "") || `post-${Date.now()}`
+              );
             },
           },
           validation: (Rule) => Rule.required().error("URL Slug आवश्यक है"),
@@ -122,9 +116,7 @@ export const schema = {
           name: "mainImage",
           title: "मुख्य तस्वीर",
           type: "image",
-          options: {
-            hotspot: true,
-          },
+          options: { hotspot: true },
           fields: [
             {
               name: "alt",
@@ -168,9 +160,7 @@ export const schema = {
           title: "टैग",
           type: "array",
           of: [{ type: "string" }],
-          options: {
-            layout: "tags",
-          },
+          options: { layout: "tags" },
         },
       ],
       orderings: [
@@ -206,7 +196,7 @@ export const schema = {
       },
     },
 
-    // Block Content Schema for rich text
+    // Block Content Schema
     {
       name: "blockContent",
       title: "Block Content",
@@ -243,9 +233,7 @@ export const schema = {
                     name: "href",
                     type: "url",
                     validation: (Rule) =>
-                      Rule.uri({
-                        scheme: ["http", "https", "mailto", "tel"],
-                      }),
+                      Rule.uri({ scheme: ["http", "https", "mailto", "tel"] }),
                   },
                   {
                     title: "नई विंडो में खोलें",
@@ -261,9 +249,7 @@ export const schema = {
         {
           type: "image",
           title: "तस्वीर",
-          options: {
-            hotspot: true,
-          },
+          options: { hotspot: true },
           fields: [
             {
               name: "alt",
@@ -287,64 +273,11 @@ export const schema = {
             {
               name: "style",
               type: "string",
-              options: {
-                list: ["break", "line"],
-              },
+              options: { list: ["break", "line"] },
             },
           ],
         },
       ],
-    },
-
-    // Author Schema (वैकल्पिक)
-    {
-      name: "author",
-      title: "लेखक",
-      type: "document",
-      fields: [
-        {
-          name: "name",
-          title: "नाम",
-          type: "string",
-          validation: (Rule) => Rule.required(),
-        },
-        {
-          name: "slug",
-          title: "Slug",
-          type: "slug",
-          options: {
-            source: "name",
-            maxLength: 96,
-          },
-        },
-        {
-          name: "image",
-          title: "तस्वीर",
-          type: "image",
-          options: {
-            hotspot: true,
-          },
-        },
-        {
-          name: "bio",
-          title: "परिचय",
-          type: "array",
-          of: [
-            {
-              title: "Block",
-              type: "block",
-              styles: [{ title: "Normal", value: "normal" }],
-              lists: [],
-            },
-          ],
-        },
-      ],
-      preview: {
-        select: {
-          title: "name",
-          media: "image",
-        },
-      },
     },
   ],
 };
