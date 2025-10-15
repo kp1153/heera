@@ -3,25 +3,50 @@ import Image from "next/image";
 import Link from "next/link";
 import { getPostBySlugAndCategory, urlFor } from "@/lib/sanity";
 import { PortableText } from "@portabletext/react";
-
+import ViewsCounter from "@/components/ViewsCounter";
 export const dynamic = "force-dynamic";
 
-// Category display names mapping
 const getCategoryDisplayName = (route) => {
   const displayNames = {
-    kavita: "कविता",
-    kahani: "कहानी",
-    upanyas: "उपन्यास",
-    alochna: "आलोचना",
-    aalekh: "आलेख",
-    sampadhan: "संपादन",
-    jivani: "जीवनी",
-    vividh: "विविध",
+    "desh": "देश",
+    "rajneeti": "राजनीति",
+    "duniya": "दुनिया",
+    "vishleshan": "विश्लेषण",
+    "vichar": "विचार",
+    "video": "वीडियो",
+    "waqt-bewaqt": "वक़्त-बेवक़्त",
+    "andhra-pradesh": "आंध्र-प्रदेश",
+    "arunachal-pradesh": "अरुणाचल-प्रदेश",
+    "assam": "असम",
+    "bihar": "बिहार",
+    "chhattisgarh": "छत्तीसगढ़",
+    "goa": "गोवा",
+    "gujarat": "गुजरात",
+    "haryana": "हरियाणा",
+    "himachal-pradesh": "हिमाचल-प्रदेश",
+    "jharkhand": "झारखंड",
+    "karnataka": "कर्नाटक",
+    "kerala": "केरल",
+    "madhya-pradesh": "मध्य-प्रदेश",
+    "maharashtra": "महाराष्ट्र",
+    "manipur": "मणिपुर",
+    "meghalaya": "मेघालय",
+    "mizoram": "मिजोरम",
+    "nagaland": "नागालैंड",
+    "odisha": "ओडिशा",
+    "punjab": "पंजाब",
+    "rajasthan": "राजस्थान",
+    "sikkim": "सिक्किम",
+    "tamil-nadu": "तमिलनाडु",
+    "telangana": "तेलंगाना",
+    "tripura": "त्रिपुरा",
+    "uttar-pradesh": "उत्तर-प्रदेश",
+    "uttarakhand": "उत्तराखंड",
+    "west-bengal": "पश्चिम-बंगाल",
   };
   return displayNames[route] || route;
 };
 
-// Custom components for PortableText
 const portableTextComponents = {
   block: {
     normal: ({ children }) => (
@@ -67,71 +92,106 @@ const portableTextComponents = {
       <strong className="font-bold text-gray-900">{children}</strong>
     ),
     em: ({ children }) => <em className="italic">{children}</em>,
-    link: ({ value, children }) => (
-      <a
-        href={value.href}
-        className="text-blue-600 hover:text-blue-800 underline font-medium"
-        target={value.blank ? "_blank" : "_self"}
-        rel={value.blank ? "noopener noreferrer" : undefined}
-      >
-        {children}
-      </a>
-    ),
+    link: ({ value, children }) => {
+      const href = value?.href || "#";
+      return (
+        
+          href={href}
+          className="text-blue-600 hover:text-blue-800 underline font-medium"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {children}
+        </a>
+      );
+    },
   },
   types: {
-    image: ({ value }) => (
-      <div className="my-8">
-        <div className="relative w-full aspect-video rounded-lg overflow-hidden shadow-lg">
+    image: ({ value }) => {
+      if (!value?.asset) return null;
+
+      return (
+        <div className="my-8 flex justify-center">
           <Image
-            src={urlFor(value).url()}
+            src={urlFor(value).width(1200).url()}
             alt={value.alt || "Article image"}
-            fill
-            className="object-contain"
+            width={1200}
+            height={800}
+            className="object-contain rounded-lg shadow max-h-[70vh] w-auto bg-gray-100"
           />
+          {value.caption && (
+            <p className="text-sm text-gray-600 text-center mt-2 italic w-full">
+              {value.caption}
+            </p>
+          )}
         </div>
-        {value.caption && (
-          <p className="text-sm text-gray-600 text-center mt-2 italic">
-            {value.caption}
-          </p>
-        )}
+      );
+    },
+    gallery: ({ value }) => (
+      <div className="my-8 grid grid-cols-2 md:grid-cols-3 gap-4">
+        {value.images?.map((img, index) => (
+          <div key={index} className="relative aspect-square">
+            <Image
+              src={urlFor(img).width(600).url()}
+              alt={`Gallery image ${index + 1}`}
+              fill
+              className="object-cover rounded-lg shadow"
+            />
+          </div>
+        ))}
       </div>
     ),
   },
 };
 
-export default async function PostPage({ params }) {
+export default async function NewsPage({ params }) {
   const { category, slug } = await params;
-
   const safeCategory = decodeURIComponent(category);
   const safeSlug = decodeURIComponent(slug);
-
-  console.log("Params:", { safeCategory, safeSlug });
-
-  // साहित्यिक categories के लिए validation
   const validCategories = [
-    "kavita",
-    "kahani",
-    "upanyas",
-    "alochna",
-    "aalekh",
-    "sampadhan",
-    "jivani",
-    "vividh",
+    "desh",
+    "rajneeti",
+    "duniya",
+    "vishleshan",
+    "vichar",
+    "video",
+    "waqt-bewaqt",
+    "andhra-pradesh",
+    "arunachal-pradesh",
+    "assam",
+    "bihar",
+    "chhattisgarh",
+    "goa",
+    "gujarat",
+    "haryana",
+    "himachal-pradesh",
+    "jharkhand",
+    "karnataka",
+    "kerala",
+    "madhya-pradesh",
+    "maharashtra",
+    "manipur",
+    "meghalaya",
+    "mizoram",
+    "nagaland",
+    "odisha",
+    "punjab",
+    "rajasthan",
+    "sikkim",
+    "tamil-nadu",
+    "telangana",
+    "tripura",
+    "uttar-pradesh",
+    "uttarakhand",
+    "west-bengal",
   ];
-
   if (!validCategories.includes(safeCategory)) {
-    console.warn("Invalid category:", safeCategory);
     notFound();
   }
-
   const post = await getPostBySlugAndCategory(safeSlug, safeCategory);
-  console.log("Fetched post:", post);
-
   if (!post) {
-    console.warn("Post not found for slug:", safeSlug);
     notFound();
   }
-
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -141,71 +201,39 @@ export default async function PostPage({ params }) {
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+      timeZone: "Asia/Kolkata",
     });
   };
-
   const categoryDisplayName = getCategoryDisplayName(safeCategory);
-
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Breadcrumb */}
-        <div className="mb-6">
-          <nav className="flex items-center space-x-2 text-sm">
-            <Link
-              href="/"
-              className="text-blue-600 hover:text-blue-800 hover:underline"
-            >
-              होम
-            </Link>
-            <span className="text-gray-500">›</span>
-            <Link
-              href={`/${safeCategory}`}
-              className="text-blue-600 hover:text-blue-800 hover:underline"
-            >
-              {categoryDisplayName}
-            </Link>
-            <span className="text-gray-500">›</span>
-            <span className="text-gray-700 font-medium">वर्तमान रचना</span>
-          </nav>
+        <div className="flex items-center justify-end mb-6">
+          <div className="flex items-center gap-4 text-sm text-gray-600">
+            <span className="font-medium">{formatDate(post.publishedAt)}</span>
+            <ViewsCounter slug={safeSlug} initialViews={post.views || 0} />
+          </div>
         </div>
-
-        {/* Category and Date */}
-        <div className="flex items-center justify-between mb-6">
-          <span className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
-            {categoryDisplayName}
-          </span>
-          <span className="text-gray-600 text-sm font-medium">
-            {formatDate(post.publishedAt)}
-          </span>
-        </div>
-
-        {/* Title */}
         <h1 className="text-4xl font-bold mb-8 text-gray-900 leading-tight">
           {post.title}
         </h1>
-
-        {/* Main Image */}
         {post.mainImageUrl && (
-          <div className="relative w-full aspect-video mb-8 rounded-xl overflow-hidden shadow-lg">
+          <div className="w-full mb-8 flex justify-center">
             <Image
               src={post.mainImageUrl}
-              alt={post.mainImageAlt}
-              fill
-              className="object-contain"
-              priority // LCP image
+              alt={post.mainImageAlt || "Main image"}
+              width={2500}
+              height={2122}
+              className="object-contain w-auto max-h-[80vh] rounded-xl shadow bg-gray-100"
+              priority
             />
           </div>
         )}
-
-        {/* Image Caption */}
         {post.mainImageCaption && (
           <p className="text-center text-sm text-gray-600 mb-8 italic -mt-4">
             {post.mainImageCaption}
           </p>
         )}
-
-        {/* Content */}
         <article className="bg-white rounded-xl shadow-lg p-8 mb-8">
           <div className="prose prose-lg max-w-none">
             <PortableText
@@ -214,29 +242,7 @@ export default async function PostPage({ params }) {
             />
           </div>
         </article>
-
-        {/* Back Navigation */}
-        <div className="flex items-center justify-between">
-          <Link
-            href={`/${safeCategory}`}
-            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
-          >
-            <svg
-              className="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            और {categoryDisplayName} की रचनाएं देखें
-          </Link>
-
+        <div className="flex items-center justify-center">
           <Link
             href="/"
             className="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-semibold"

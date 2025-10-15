@@ -48,7 +48,11 @@ export default function Navbar() {
         </div>
 
         {/* Menu */}
-        <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6 py-3 text-sm md:text-base">
+        <div className="flex items-center justify-center gap-3 md:gap-6 py-3 text-sm md:text-base overflow-x-auto whitespace-nowrap">
+          <Link href="/" className="hover:text-red-200 transition">
+            होम
+          </Link>
+
           <Link href="/desh" className="hover:text-red-200 transition">
             देश
           </Link>

@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "हीरालाल नागर",
-  description: "सुपरिचित कथाकार, कविता तथा आलोचना में भी दखल",
+  title: "विवेक त्यागी",
+  description: "सुपरिचित पत्रकार",
 };
 
 export default function RootLayout({ children }) {
