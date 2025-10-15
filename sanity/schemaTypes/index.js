@@ -23,14 +23,13 @@ export const schema = {
             maxLength: 96,
             slugify: (input) => {
               const categoryMap = {
-                कविता: "kavita",
-                जीवनी: "jivani",
-                संपादन: "sampadhan",
-                विविध: "vividh",
-                आलेख: "aalekh",
-                उपन्यास: "upanyas",
-                कहानी: "kahani",
-                आलोचना: "alochna",
+                देश: "desh",
+                राजनीति: "rajneeti",
+                दुनिया: "duniya",
+                विश्लेषण: "vishleshan",
+                विचार: "vichar",
+                वीडियो: "video",
+                "वक़्त-बेवक़्त": "waqt-bewaqt",
               };
               if (categoryMap[input]) return categoryMap[input];
               return input
@@ -105,25 +104,13 @@ export const schema = {
           validation: (Rule) => Rule.required().error("सामग्री आवश्यक है"),
         },
         {
-          name: "excerpt",
-          title: "संक्षिप्त विवरण",
-          type: "text",
-          rows: 3,
-          description:
-            "खबर का छोटा सार (वैकल्पिक - अगर नहीं दिया तो सामग्री से अपने आप बनेगा)",
-        },
-        {
           name: "mainImage",
           title: "मुख्य तस्वीर",
           type: "image",
-          options: { hotspot: true },
+          options: {
+            hotspot: true,
+          },
           fields: [
-            {
-              name: "alt",
-              title: "Alt Text (वैकल्पिक पाठ)",
-              type: "string",
-              description: "तस्वीर का विवरण (SEO के लिए महत्वपूर्ण)",
-            },
             {
               name: "caption",
               title: "कैप्शन",
@@ -149,18 +136,49 @@ export const schema = {
             Rule.required().error("श्रेणी का चुनाव आवश्यक है"),
         },
         {
-          name: "featured",
-          title: "मुख्य समाचार",
-          type: "boolean",
-          description: "क्या यह मुख्य समाचार है?",
-          initialValue: false,
+          name: "state",
+          title: "राज्य",
+          type: "string",
+          options: {
+            list: [
+              { title: "आंध्र-प्रदेश", value: "andhra-pradesh" },
+              { title: "अरुणाचल-प्रदेश", value: "arunachal-pradesh" },
+              { title: "असम", value: "assam" },
+              { title: "बिहार", value: "bihar" },
+              { title: "छत्तीसगढ़", value: "chhattisgarh" },
+              { title: "गोवा", value: "goa" },
+              { title: "गुजरात", value: "gujarat" },
+              { title: "हरियाणा", value: "haryana" },
+              { title: "हिमाचल-प्रदेश", value: "himachal-pradesh" },
+              { title: "झारखंड", value: "jharkhand" },
+              { title: "कर्नाटक", value: "karnataka" },
+              { title: "केरल", value: "kerala" },
+              { title: "मध्य-प्रदेश", value: "madhya-pradesh" },
+              { title: "महाराष्ट्र", value: "maharashtra" },
+              { title: "मणिपुर", value: "manipur" },
+              { title: "मेघालय", value: "meghalaya" },
+              { title: "मिजोरम", value: "mizoram" },
+              { title: "नागालैंड", value: "nagaland" },
+              { title: "ओडिशा", value: "odisha" },
+              { title: "पंजाब", value: "punjab" },
+              { title: "राजस्थान", value: "rajasthan" },
+              { title: "सिक्किम", value: "sikkim" },
+              { title: "तमिलनाडु", value: "tamil-nadu" },
+              { title: "तेलंगाना", value: "telangana" },
+              { title: "त्रिपुरा", value: "tripura" },
+              { title: "उत्तर-प्रदेश", value: "uttar-pradesh" },
+              { title: "उत्तराखंड", value: "uttarakhand" },
+              { title: "पश्चिम-बंगाल", value: "west-bengal" },
+            ],
+          },
+          description: "अगर खबर किसी राज्य से संबंधित है तो चुनें (वैकल्पिक)",
         },
         {
-          name: "tags",
-          title: "टैग",
-          type: "array",
-          of: [{ type: "string" }],
-          options: { layout: "tags" },
+          name: "views",
+          title: "Views Count",
+          type: "number",
+          initialValue: 0,
+          validation: (Rule) => Rule.min(0),
         },
       ],
       orderings: [
@@ -252,16 +270,36 @@ export const schema = {
           options: { hotspot: true },
           fields: [
             {
-              name: "alt",
-              title: "Alt Text",
-              type: "string",
-              description: "तस्वीर का विवरण",
-            },
-            {
               name: "caption",
               title: "कैप्शन",
               type: "string",
               description: "तस्वीर के नीचे दिखने वाला टेक्स्ट",
+            },
+          ],
+        },
+        {
+          type: "object",
+          name: "gallery",
+          title: "फोटो गैलरी",
+          fields: [
+            {
+              name: "images",
+              title: "तस्वीरें",
+              type: "array",
+              of: [
+                {
+                  type: "image",
+                  options: {
+                    hotspot: true,
+                    accept: "image/*",
+                  },
+                },
+              ],
+              options: {
+                layout: "grid",
+              },
+              validation: (Rule) =>
+                Rule.min(1).error("कम से कम एक तस्वीर जोड़ें"),
             },
           ],
         },
@@ -273,7 +311,9 @@ export const schema = {
             {
               name: "style",
               type: "string",
-              options: { list: ["break", "line"] },
+              options: {
+                list: ["break", "line"],
+              },
             },
           ],
         },
