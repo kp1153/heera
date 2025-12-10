@@ -4,7 +4,7 @@ export default function Footer() {
     <footer className="bg-gray-900 text-gray-300 py-4">
       <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-sm">
         <p>
-          © 2025 विवेक त्यागी | संपर्क: 97170 44638 | ईमेल:        
+          © 2025 विवेक त्यागी | संपर्क: 97170 44638 | ईमेल: vivektyagi1153@rediffmail.com       
         </p>
         <p>
           वेबसाइट Developed by:{" "}
