@@ -1,14 +1,4 @@
-// app/page.js
-import React from "react";
-import { getAllPosts } from "@/lib/sanity";
-import Link from "next/link";
-import Image from "next/image";
-
-export const dynamic = "force-dynamic";
-
-export default async function Page() {
-  const posts = await getAllPosts();
-
+export default function MagazineLayout({ posts = [], popularPosts = [], categories = [] }) {
   if (!posts || posts.length === 0) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
@@ -19,82 +9,132 @@ export default async function Page() {
     );
   }
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("hi-IN", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  };
+  const featuredPost = posts[0];
+  const mediumPosts = posts.slice(1, 4);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-max">
-        {posts.map((post) => (
-          <article
-            key={post._id}
-            className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col"
-          >
-            {post.mainImage && (
-              <div className="relative w-full bg-gray-100 flex items-center justify-center min-h-[250px]">
-                <Image
-                  src={post.mainImage}
-                  alt={post.mainImageAlt}
-                  width={600}
-                  height={400}
-                  className="object-contain w-full h-auto max-h-[400px]"
-                  priority
-                />
+    <div className="bg-gray-50 min-h-screen">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Featured Post */}
+        {featuredPost && (
+          <div className="mb-8">
+            <article className="bg-white rounded-lg shadow-lg overflow-hidden">
+              <div className="h-96 relative bg-gradient-to-r from-blue-500 to-purple-600">
+                {featuredPost.image && (
+                  <img
+                    src={featuredPost.image}
+                    alt={featuredPost.title}
+                    className="w-full h-full object-cover"
+                  />
+                )}
+              </div>
+              <div className="p-8">
+                {featuredPost.category && (
+                  <span className={`${featuredPost.category.color || 'bg-blue-500'} text-white px-3 py-1 rounded text-sm`}>
+                    {featuredPost.category.name}
+                  </span>
+                )}
+                <h2 className="text-4xl font-bold mt-4 mb-3">
+                  {featuredPost.title}
+                </h2>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-500">
+                    {featuredPost.date}
+                  </span>
+                  <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+                    पढ़ें →
+                  </button>
+                </div>
+              </div>
+            </article>
+          </div>
+        )}
+
+        {/* Grid Layout */}
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Medium Posts - Left Side */}
+          <div className="md:col-span-2 space-y-6">
+            {mediumPosts.map((post) => (
+              <article
+                key={post.id}
+                className="bg-white rounded-lg shadow hover:shadow-lg transition p-6"
+              >
+                <div className="flex gap-4">
+                  {post.image && (
+                    <div className="w-48 h-32 relative rounded flex-shrink-0 overflow-hidden bg-gray-200">
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    {post.category && (
+                      <span className={`${post.category.color || 'bg-blue-500'} text-white px-2 py-1 rounded text-xs`}>
+                        {post.category.name}
+                      </span>
+                    )}
+                    <h3 className="text-xl font-bold mt-2 mb-2 hover:text-blue-600 cursor-pointer">
+                      {post.title}
+                    </h3>
+                    <span className="text-xs text-gray-500">
+                      {post.date}
+                    </span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {/* Sidebar - Right Side */}
+          <div className="space-y-6">
+            {/* Popular Posts */}
+            {popularPosts && popularPosts.length > 0 && (
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-xl font-bold mb-4 border-b pb-2">
+                  लोकप्रिय पोस्ट
+                </h3>
+                <div className="space-y-4">
+                  {popularPosts.map((post, index) => (
+                    <div
+                      key={post.id}
+                      className={index < popularPosts.length - 1 ? "border-b pb-3" : "pb-3"}
+                    >
+                      <h4 className="font-semibold text-sm mb-1 hover:text-blue-600 cursor-pointer">
+                        {post.title}
+                      </h4>
+                      <span className="text-xs text-gray-500">
+                        {post.date}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
-            <div className="p-6 flex flex-col flex-grow">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs bg-blue-600 text-white px-3 py-1 rounded-full font-semibold">
-                  {post.category?.name || "सामान्य"}
-                </span>
-                <span className="text-xs text-gray-500 font-medium">
-                  {formatDate(post.publishedAt)}
-                </span>
+            {/* Categories */}
+            {categories && categories.length > 0 && (
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-xl font-bold mb-4 border-b pb-2">
+                  श्रेणियाँ
+                </h3>
+                <div className="space-y-2">
+                  {categories.map((cat) => (
+                    <div key={cat.slug} className="flex justify-between">
+                      <span className="text-sm hover:text-blue-600 cursor-pointer">
+                        {cat.name}
+                      </span>
+                      <span className="text-xs bg-gray-200 px-2 py-1 rounded">
+                        {cat.count}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-
-              <h2 className="text-xl font-bold mb-4 line-clamp-2 leading-tight text-gray-900 hover:text-blue-700 transition-colors">
-                <Link
-                  href={`/${post.category?.slug?.current}/${post.slug?.current}`}
-                  className="hover:underline"
-                >
-                  {post.title}
-                </Link>
-              </h2>
-
-              <div className="mt-auto">
-                {post.category?.slug?.current && post.slug?.current && (
-                  <Link
-                    href={`/${post.category.slug.current}/${post.slug.current}`}
-                    className="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-sm hover:underline transition-colors"
-                  >
-                    और पढ़ें
-                    <svg
-                      className="w-4 h-4 ml-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </Link>
-                )}
-              </div>
-            </div>
-          </article>
-        ))}
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

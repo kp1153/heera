@@ -6,11 +6,15 @@ import Footer from "@/components/Footer";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
+  fallback: ["system-ui", "arial"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+  fallback: ["monospace", "courier"],
 });
 
 export const metadata = {
@@ -20,17 +24,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="hi">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        {/* Header */}
         <Navbar />
-
-        {/* Main content (takes available space) */}
         <main className="flex-grow">{children}</main>
-
-        {/* Sticky Footer */}
         <Footer />
       </body>
     </html>
